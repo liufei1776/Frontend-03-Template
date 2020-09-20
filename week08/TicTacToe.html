@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .cell {
+            width: 100px;
+            height: 100px;
+            display: inline-block;
+            border: 1px solid black;
+            vertical-align: middle;
+
+            line-height: 100px;
+            font-size: 50px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="board"></div>
+
+    <script>
+        const EMPTY = 0;
+        const CIRCLE = 1;
+        const FORK = 2;
+
+        let pattern = [
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0]
+        ];
+        
+        let color = CIRCLE;
+
+        function show() {
+            let board = document.getElementById('board');
+
+            board.innerHTML = '';
+
+            for(let i = 0; i < 3; i++) {
+                for(let j = 0; j < 3; j++) {
+                    let cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    cell.innerText = pattern[i][j] == FORK ? '❌' :
+                                     pattern[i][j] == CIRCLE ? '⭕️' : '';
+                    
+                    cell.addEventListener('click', () => move(i, j))
+                    board.appendChild(cell);
+                }
+                board.appendChild(document.createElement('br'));
+            }
+        }
+
+        function move(i, j) {
+            pattern[i][j] = color;
+
+             // Check success
+             if(check(pattern, color)) {
+                alert( color == FORK ? '❌ is winner!' : '⭕️ is winner!');
+            }
+
+            color = 3 - color;
+            show();
+
+            if(willWin(pattern, color)) {
+                console.log( color == FORK ? '❌ will win!' : '⭕️ will win!');
+            }
+ 
+        }
+
+        function check(pattern, color) {
+            // check row
+            for(let i=0; i<3; i++) {
+                let win = true;
+                for(let j=0; j<3; j++) {
+                    if(pattern[i][j] != color) {
+                        win = false;
+                    }
+                }
+
+                if(win) return true;
+            }
+
+            // check column
+            for(let i=0; i<3; i++) {
+                let win = true;
+                for(let j=0; j<3; j++) {
+                    if(pattern[j][i] != color) {
+                        win = false;
+                    }
+                }
+                
+                if(win) return true;
+            }
+
+            // check diagonal 
+            // right diagonal
+            {
+                let win = true;
+                for(let i=0; i<3; i++) {
+                    if(pattern[i][2-i] != color) {
+                        win = false;
+                    }
+                }
+                if(win) return true;
+            }
+            // left diagonal
+            {
+                let win = true;
+                for(let i=0; i<3; i++) {
+                    if(pattern[i][i] != color) {
+                        win = false;
+                    }
+                }
+                if(win) return true;
+            }
+        }
+
+        function clone(pattern) {
+            return JSON.parse(JSON.stringify(pattern));
+        }
+
+        function willWin(pattern, color) {
+            for(let i=0; i<3; i++) {
+                for(let j=0; j<3; j++) {
+                    if(pattern[i][j]) continue;
+
+                    let tmp = clone(pattern);
+                    tmp[i][j] = color;
+                    if(check(tmp, color)) return true;
+                }
+            }
+
+            return false;
+        }
+
+        show();
+    </script>
+</body>
+
+</html>
