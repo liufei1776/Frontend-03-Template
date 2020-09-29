@@ -33,24 +33,24 @@
         let clear = false;
 
         let container = document.getElementById('container');
-        for(let row = 0; row < 100; row++) {
-            for(let col = 0 ; col < 100; col++) {
+        for(let y = 0; y < 100; y++) {
+            for(let x = 0 ; x < 100; x++) {
                 let cell = document.createElement('div');
                 cell.classList.add('cell');
 
-                if(map[100 * row + col] == 1) {
-                    cell.style.backgroundColor = 'black';
+                if(map[100 * y + x] == 1) {
+                    cell.style.backgroundxor = 'black';
                 }
 
                 cell.addEventListener('mousemove', () => {
                     if(mousedown) {
                         if(clear) {
-                            cell.style.backgroundColor = '';
-                            map[100 * row + col] = 0;
+                            cell.style.backgroundxor = '';
+                            map[100 * y + x] = 0;
                         }
                         else {
-                            cell.style.backgroundColor = 'black';
-                            map[100 * row + col] = 1;
+                            cell.style.backgroundxor = 'black';
+                            map[100 * y + x] = 1;
                         }
                     }
                 });
@@ -66,6 +66,35 @@
 
         document.addEventListener('mouseup', () => mousedown = false);
         document.addEventListener('contextmenu', e => e.preventDefault());
+
+        // 寻路算法
+        function path(map, start, end) {
+            let queue = [start];
+
+            function insert(y, x) {
+                if(x < 0 || x > 100 || y < 0 || y > 100) return;
+
+                if(map[y * 100 + x]) return;
+
+                map[y * 100 + x] = 2;
+                queue.push([x,y]);
+            }
+
+            while(queue.length) {
+                let [x, y] = queue.shift();
+                console.log(x, y);
+
+                if(x === end[0] && y === end[1]) return true;
+
+                insert(x-1, y);
+                insert(x, y-1);
+                insert(x+1, y);
+                insert(x, y+1); 
+            }
+
+            return false;
+
+        }
     </script>
 </body>
 </html>
