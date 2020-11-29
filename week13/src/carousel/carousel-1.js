@@ -1,4 +1,9 @@
-import {Component, createElement} from './framework.js';
+import {Component, createElement} from '../framework.js';
+
+/*
+    静态展示Carousel 
+*/
+
 
 class Carousel extends Component {
     constructor() {

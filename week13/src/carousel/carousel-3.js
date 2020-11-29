@@ -1,4 +1,11 @@
-import { Component, createElement } from './framework.js';
+import { Component, createElement } from '../framework.js';
+
+
+/*
+    实现鼠标拖拽切换图片功能
+    判断“拖拽是否过半”
+*/
+
 
 class Carousel extends Component {
     constructor() {
@@ -7,6 +14,7 @@ class Carousel extends Component {
         this.attributes = Object.create(null);
     }
 
+    /* 课程中的代码 */
     // 就像 React 一样，组件必须实现 render 方法
     // render() {
     //     this.root = document.createElement('div');
@@ -45,6 +53,9 @@ class Carousel extends Component {
     //     return this.root;
     // }
 
+
+
+    /* 按照自己能理解的方式 写的  */
     render() {
         this.root = document.createElement('div');
         this.root.classList.add("carousel");
@@ -64,21 +75,70 @@ class Carousel extends Component {
         }
         console.log(box.childNodes);
         this.root.appendChild(box);
+        console.log(this.root.children);
 
-        // 每次transition后
-        box.addEventListener('transitionend', function(){
-           let left = box.removeChild(box.childNodes[0]);
-           box.appendChild(left);
+       
+        let basePosition = 0;  // 记录处于当前第几张图片上
 
-           box.style.transition = 'none'; 
-           box.style.transform = 'translateX(0px)';
-        })
+        // 添加鼠标事件
+        this.root.addEventListener('mousedown', event => {
+            
+            // 记录鼠标点击的起始点位置
+            let startX = event.clientX;
 
 
-        const timer = setInterval(()=>{
-            box.style.transition = '';
-            box.style.transform = `translateX(${-IMG_WIDTH}px)`;
-        }, 3000);
+            let move = event => {
+                let distanceX = event.clientX - startX;
+
+                let box = this.root.children[0];
+                box.style.transition = 'none';
+                // 注意移动的基准
+                box.style.transform = `translateX(${-basePosition * IMG_WIDTH + distanceX}px)`;
+            }
+
+            let up = event => {
+                let distanceX = event.clientX - startX;
+                //console.log(Math.round(distanceX / 500));
+
+                // 判断是是否“移动过半”
+                // 更新basePosition, 重新记录“基准”
+                basePosition = basePosition - Math.round(distanceX / 500);
+                console.log(basePosition);
+
+                // 边缘检测
+                basePosition = basePosition < 0 ? 0 :
+                               basePosition > 3 ? 3 :
+                               basePosition;
+
+
+                box.style.transition = '';  
+                box.style.transform = `translateX(${-basePosition * IMG_WIDTH}px)`;
+
+                document.removeEventListener('mousemove', move);
+                document.removeEventListener('mouseup', up);
+            }
+
+            document.addEventListener('mousemove', move);
+            document.addEventListener('mouseup', up);
+
+        });
+
+
+
+        // // 每次transition后
+        // box.addEventListener('transitionend', function(){
+        //    let left = box.removeChild(box.childNodes[0]);
+        //    box.appendChild(left);
+
+        //    box.style.transition = 'none'; 
+        //    box.style.transform = 'translateX(0px)';
+        // })
+
+
+        // const timer = setInterval(()=>{
+        //     box.style.transition = '';
+        //     box.style.transform = `translateX(${-IMG_WIDTH}px)`;
+        // }, 3000);
 
         return this.root;
 
@@ -97,16 +157,4 @@ class Carousel extends Component {
 }
 
 
-
-const imgPaths= [
-    'https://static001.geekbang.org/resource/image/bb/21/bb38fb7c1073eaee1755f81131f11d21.jpg',
-    'https://static001.geekbang.org/resource/image/1b/21/1b809d9a2bdf3ecc481322d7c9223c21.jpg',
-    'https://static001.geekbang.org/resource/image/b6/4f/b6d65b2f12646a9fd6b8cb2b020d754f.jpg',
-    'https://static001.geekbang.org/resource/image/73/e4/730ea9c393def7975deceb48b3eb6fe4.jpg'
-];
-
-
-
-// src会被 JSX 解析成正确的 attriburtes
-let a = <Carousel src={imgPaths} />;
-a.mountTo(document.body);
+export { Carousel };
