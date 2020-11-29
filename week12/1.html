@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+
+        function reactive(obj) {
+            return new Proxy(obj, {
+                set(obj, key, newVal) {
+                    obj[key] = newVal;
+
+                    return obj[key];
+                },
+                get(obj, key) {
+                    return obj[key];
+                }
+            })
+        }
+
+
+        let obj = {
+            a: 1,
+            b: 2
+        };
+
+
+        let po = reactive(obj);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="container">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio porro deleniti molestias? Totam cum minima labore perferendis eveniet atque consectetur rerum placeat error, provident praesentium animi earum tempore? Sit, culpa.
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto nihil sunt at optio numquam explicabo deleniti tempora, dolore unde quos quis earum nam cumque dolores et, molestias modi odio natus.
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, sit. Nesciunt pariatur voluptate dolorum, nihil rerum soluta suscipit sunt aliquam magni numquam quibusdam porro nemo, optio repudiandae qui autem rem.
+        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quam officia architecto, culpa repudiandae repellendus cupiditate consectetur placeat quod fuga cumque facilis eum iure nemo et nostrum reprehenderit laudantium perferendis laborum.
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus, vitae blanditiis quam itaque ex nostrum, excepturi aut quis corporis dolores enim ab error consectetur laborum delectus sed maxime. Esse, doloremque?
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam, iste eum aperiam at voluptate sequi explicabo aliquam doloremque enim ut. Expedita optio a dolore maxime qui placeat ipsam consectetur tempora.
+        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt ex nam ipsam, officia at omnis eveniet, quam illo facilis quasi quaerat molestias dignissimos, fugit perferendis vitae? Est natus veritatis voluptatibus!
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi dolor maiores ratione, nostrum temporibus neque, doloribus, autem necessitatibus unde blanditiis debitis. Dolor dignissimos molestiae dolores, deserunt repellendus nostrum rerum unde?
+        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Porro alias eligendi cum explicabo deserunt modi accusamus repellat fugit sunt, illum libero sed ea doloribus tempora sequi a. Tempore, rerum mollitia?
+    </div>
+    <div id="dragable" style="width: 100px;height: 100px;background-color: pink;"></div>
+    <script>
+        let dragable = document.getElementById("dragable");
+
+        dragable.addEventListener("mousedown", function(event) {
+            let startX = event.offsetX, startY = event.offsetY;
+            console.log(startX, startY);
+
+            let up = () => {
+                document.removeEventListener('mousemove', move);
+                document.removeEventListener('mouseup', up);
+            }
+
+            let move = event => {
+                dragable.style.transform = `translate(${event.clientX - startX}px, ${event.clientY - startY}px)`; 
+            }
+
+            document.addEventListener("mousemove", move);
+            document.addEventListener("mouseup", up);
+
+        })
+
+    </script>
+</body>
+</html>

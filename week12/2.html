@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        let callbacks = [];
+
+        function effect(callback) {
+            callbacks.push(callback);
+        }
+
+        function reactive(obj) {
+            return new Proxy(obj, {
+                set(obj, key, newVal) {
+                    obj[key] = newVal;
+
+                    for(let cb of callbacks) {
+                        cb();
+                    }
+
+                    return obj[key];
+                },
+                get(obj, key) {
+                    return obj[key];
+                }
+            })
+        }
+
+
+        let obj = {
+            a: 1,
+            b: 2
+        };
+
+
+        let po = reactive(obj);
+
+        effect( () => {
+            console.log('effect!');
+        })
+    </script>
+</body>
+
+</html>
